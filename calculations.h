@@ -1,3 +1,65 @@
 #pragma once
+#include <numeric>
 
 // only closing prices for now
+
+vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates) {
+
+	if (_closing_prices.size() != dates.size()) {
+		throw;
+	}
+
+	int index = getIndexOfDate(date, dates);
+	vector<double> percents;
+	auto closing_prices = vector<double>(_closing_prices.begin() + index, _closing_prices.end());
+	double today, tomorrow, pct;
+	for (int i = index; i < closing_prices.size() - 1; i++) {
+		today = closing_prices[i];
+		tomorrow = closing_prices[i + 1];
+		pct = (tomorrow - today) / today;
+		percents.push_back(pct);
+	}
+	return percents;
+}
+
+double Sum(vector<double> data) {
+	return std::accumulate(data.begin(), data.end(), 0.0);
+}
+
+double MomentSum(vector<double> data, int n) {
+	double mean = SampleMean(data);
+	vector<double> diff;
+	for (int i = 0; i < data.size(); i++) {
+		diff.push_back(pow(data[i] - mean, n));
+	}
+	return Sum(diff);
+}
+
+double SampleMean(vector<double> data) {
+	auto sum = Sum(data);
+	return sum / data.size();
+}
+
+double Variance(vector<double> data) {
+	double denom = data.size() - 1;
+	double num = MomentSum(data, 2);
+	return num / denom;
+}
+
+double StandardDev(vector<double> data) {
+	return sqrt(Variance(data))
+}
+
+double Skewness(vector<double> data) {
+	double stdev = StandardDev(data);
+	double num = MomentSum(data, 3);
+	double dem = (data.size() - 1) * pow(stdev, 3);
+	return num / dem;
+}
+
+double Kurtosis(vector<double> data) {
+	double stdev = StandardDev(data);
+	double num = MomentSum(data, 4);
+	double dem = (data.size() - 1) * pow(stdev, 4);
+	return num / dem;
+}
