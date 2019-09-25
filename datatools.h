@@ -42,3 +42,12 @@ line_object parseLine(string line) {
 	line_object result(date, data);
 	return result;
 }
+
+int getIndexOfDate(string date, vector<string> Date) {
+	vector<string>::iterator iter = std::find(Date.begin(), Date.end(), date);
+	if (iter != Date.end()) {
+		int index = std::distance(Date.begin(), iter);
+		return index;
+	}
+	return -1;
+}

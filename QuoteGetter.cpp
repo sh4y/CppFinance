@@ -11,10 +11,14 @@ int main()
 	string stock_name = "KO";
 	string index_name = "SPY";
 
-	stock_object stock(stock_name);
-	stock_object index(index_name);
+	// Build stock objects
+	StockObject stock(stock_name);
+	StockObject index(index_name);
 
+	//stock.getDataAtDate("2010-10-14");
+	auto result = stock.GetPercentChanges();
 	
+
 	
 	return 0;
 }

@@ -155,6 +155,7 @@
     <ClCompile Include="QuoteGetter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="calculations.h" />
     <ClInclude Include="datatools.h" />
     <ClInclude Include="stock_object.h" />
   </ItemGroup>
