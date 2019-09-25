@@ -16,9 +16,8 @@ int main()
 	StockObject index(index_name);
 
 	//stock.getDataAtDate("2010-10-14");
-	auto result = stock.GetPercentChanges();
-	
-
+	auto result = stock.GetPercentChanges(true);
+	auto result2 = stock.GetPercentChanges(false);
 	
 	return 0;
 }

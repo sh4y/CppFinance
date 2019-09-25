@@ -3,7 +3,7 @@
 
 // only closing prices for now
 
-vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates) {
+vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates, bool asPercent) {
 
 	if (_closing_prices.size() != dates.size()) {
 		throw;
@@ -17,6 +17,7 @@ vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices
 		today = closing_prices[i];
 		tomorrow = closing_prices[i + 1];
 		pct = (tomorrow - today) / today;
+		pct = asPercent ? pct * 100.0 : pct;
 		percents.push_back(pct);
 	}
 	return percents;
@@ -24,6 +25,11 @@ vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices
 
 double Sum(vector<double> data) {
 	return std::accumulate(data.begin(), data.end(), 0.0);
+}
+
+double SampleMean(vector<double> data) {
+	auto sum = Sum(data);
+	return sum / data.size();
 }
 
 double MomentSum(vector<double> data, int n) {
@@ -35,11 +41,6 @@ double MomentSum(vector<double> data, int n) {
 	return Sum(diff);
 }
 
-double SampleMean(vector<double> data) {
-	auto sum = Sum(data);
-	return sum / data.size();
-}
-
 double Variance(vector<double> data) {
 	double denom = data.size() - 1;
 	double num = MomentSum(data, 2);
@@ -47,7 +48,7 @@ double Variance(vector<double> data) {
 }
 
 double StandardDev(vector<double> data) {
-	return sqrt(Variance(data))
+	return sqrt(Variance(data));
 }
 
 double Skewness(vector<double> data) {

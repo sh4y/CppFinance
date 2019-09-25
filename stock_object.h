@@ -63,12 +63,12 @@ struct StockObject {
 
 		// Percent change of stock price
 
-		vector<double> GetPercentChanges() {
-			return PercentChangeFromDate(Date[0], Close, Date);
+		vector<double> GetPercentChanges(bool asPercent=false) {
+			return PercentChangeFromDate(Date[0], Close, Date, asPercent);
 		}
 
-		vector<double> GetPercentChangesFromDate(string date) {
-			return PercentChangeFromDate(date, Close, Date);
+		vector<double> GetPercentChangesFromDate(string date, bool asPercent = false) {
+			return PercentChangeFromDate(date, Close, Date, asPercent);
 		}
 		
 		StockObject(string stock_name) {
