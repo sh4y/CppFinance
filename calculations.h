@@ -23,6 +23,16 @@ vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices
 	return percents;
 }
 
+vector<double> LogPercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates) {
+	auto percents = PercentChangeFromDate(date, _closing_prices, dates);
+	for (int i = 0; i < percents.size(); i++) {
+		percents[i] = log(percents[i]);
+	}
+
+	return percents;
+}
+
+
 double Sum(vector<double> data) {
 	return std::accumulate(data.begin(), data.end(), 0.0);
 }
