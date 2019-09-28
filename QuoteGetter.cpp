@@ -16,8 +16,8 @@ int main()
 	StockObject index(index_name);
 
 	//stock.getDataAtDate("2010-10-14");
-	auto result = stock.GetPercentChanges(true);
-	auto result2 = stock.GetPercentChanges(false);
+	StockObject ss = stock.GetDataSubsetBetweenDates("2010-10-14", "2010-10-26");
+	auto t = ss.Close;
 	
 	return 0;
 }

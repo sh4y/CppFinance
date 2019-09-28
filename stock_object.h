@@ -70,10 +70,48 @@ struct StockObject {
 		vector<double> GetPercentChangesFromDate(string date, bool asPercent = false) {
 			return PercentChangeFromDate(date, Close, Date, asPercent);
 		}
+
+		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd=true) {
+			int modifier = inclusiveEnd ? 1 : 0;
+
+			int startIndex = getIndexOfDate(date1, Date);
+			int endIndex = getIndexOfDate(date2, Date) + modifier;
+
+
+			auto dateSubset = vector<string>(Date.begin() + startIndex, Date.begin() + endIndex);
+			auto closeSubset = vector<double>(Close.begin() + startIndex, Close.begin() + endIndex);
+			auto openSubset = vector<double>(Open.begin() + startIndex, Open.begin() + endIndex);
+			auto volSubset = vector<double>(Volume.begin() + startIndex, Volume.begin() + endIndex);
+			auto lowSubset = vector<double>(Low.begin() + startIndex, Low.begin() + endIndex);
+			auto highSubset = vector<double>(High.begin() + startIndex, High.begin() + endIndex);
+
+			return StockObject(ticker, dateSubset, closeSubset, openSubset,
+				highSubset, lowSubset, volSubset);
+		}
+
+		double PriceChangeBetweenDate(string date1, string date2) {
+			double p1 = getDataPointAtDate(date1)[3];
+			double p2 = getDataPointAtDate(date2)[3];
+
+			return (p2 - p1) / p1;
+		}
+
+		/* Constructors */
 		
 		StockObject(string stock_name) {
 			ticker = stock_name;
 			fillStockDataFromFile();
+		}
+
+		StockObject(string stock_name, vector<string> _date, vector<double> _close, vector<double> _open,
+			vector<double> _high, vector<double> _low, vector<double> _vol) {
+			ticker = stock_name;
+			Close = _close;
+			Open = _open;
+			High = _high;
+			Date = _date;
+			Volume = _vol;
+			Low = _low;
 		}
 };
 
