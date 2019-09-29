@@ -3,7 +3,7 @@
 
 // only closing prices for now
 
-vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates, bool asPercent) {
+vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates, bool asPercent=false) {
 
 	if (_closing_prices.size() != dates.size()) {
 		throw;
@@ -30,6 +30,28 @@ vector<double> LogPercentChangeFromDate(string date, vector<double> _closing_pri
 	}
 
 	return percents;
+}
+
+vector<double> GrossReturnsChange(vector<double> _closing_prices)
+{
+	vector<double> returns;
+	for (int i = 0; i < _closing_prices.size()-1; i++)
+	{
+		returns.push_back(_closing_prices[i + 1] - _closing_prices[i]);
+	}
+
+	return returns;
+}
+
+double CumulativeReturn(vector<double> _pctchange)
+{
+	double cumulativeReturn = 1;
+	for (int i = 0; i < _pctchange.size(); i++)
+	{
+		cumulativeReturn *= (1 + _pctchange[i]);
+	}
+
+	return cumulativeReturn;
 }
 
 

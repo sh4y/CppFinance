@@ -78,6 +78,11 @@ struct StockObject {
 		vector<double> GetLogChangesFromDate(string date) {
 			return LogPercentChangeFromDate(date, Close, Date);
 		}
+
+		double GetCumulativeReturnClosingPrices()
+		{
+			return CumulativeReturn(GetPercentChanges());
+		}
 		
 		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd=true) {
 			int modifier = inclusiveEnd ? 1 : 0;
