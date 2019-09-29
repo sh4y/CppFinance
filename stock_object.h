@@ -1,6 +1,5 @@
 #include <fstream>
 #include <iostream>
-#include "datatools.h"
 #include "calculations.h"
 
 using std::ifstream;
@@ -24,13 +23,20 @@ struct StockObject {
 						string line_date = lineObj.date;
 
 						Date.push_back(line_date);
-						Open.push_back(line_data[0]);
-						High.push_back(line_data[1]);
-						Low.push_back(line_data[2]);
-						Close.push_back(line_data[3]);
-						Volume.push_back(line_data[4]);
+						
+						Open.data.push_back(line_data[0]);
+						High.data.push_back(line_data[1]);
+						Low.data.push_back(line_data[2]);
+						Close.data.push_back(line_data[3]);
+						Volume.data.push_back(line_data[4]);
 					}
 				}
+
+				Open.Date = Date;
+				High.Date = Date;
+				Low.Date = Date;
+				Close.Date = Date;
+				Volume.Date = Date;
 
 				stock_file.close();
 			}
@@ -39,11 +45,12 @@ struct StockObject {
 	public:
 		string ticker;
 		vector<string> Date;
-		vector<double> Open;
-		vector<double> Close;
-		vector<double> Volume;
-		vector<double> High;
-		vector<double> Low;
+		
+		DataContainer Open;
+		DataContainer Close;
+		DataContainer Volume;
+		DataContainer High;
+		DataContainer Low;
 
 		vector<double> getDataPointAtDate(string date) {
 			vector<double> result;
@@ -51,37 +58,14 @@ struct StockObject {
 			if (index == -1)
 				throw;
 
-			result.push_back(Open[index]);
-			result.push_back(High[index]);
-			result.push_back(Low[index]);
-			result.push_back(Close[index]);
-			result.push_back(Volume[index]);
+			result.push_back(Open.data[index]);
+			result.push_back(High.data[index]);
+			result.push_back(Low.data[index]);
+			result.push_back(Close.data[index]);
+			result.push_back(Volume.data[index]);
 			
 
 			return result;
-		}
-
-		// Percent change of stock price
-
-		vector<double> GetPercentChanges(bool asPercent=false) {
-			return PercentChangeFromDate(Date[0], Close, Date, asPercent);
-		}
-
-		vector<double> GetPercentChangesFromDate(string date, bool asPercent = false) {
-			return PercentChangeFromDate(date, Close, Date, asPercent);
-		}
-
-		vector<double> GetLogChanges() {
-			return LogPercentChangeFromDate(Date[0], Close, Date);
-		}		
-		
-		vector<double> GetLogChangesFromDate(string date) {
-			return LogPercentChangeFromDate(date, Close, Date);
-		}
-
-		double GetCumulativeReturnClosingPrices()
-		{
-			return CumulativeReturn(GetPercentChanges());
 		}
 		
 		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd=true) {
@@ -92,11 +76,11 @@ struct StockObject {
 
 
 			auto dateSubset = vector<string>(Date.begin() + startIndex, Date.begin() + endIndex);
-			auto closeSubset = vector<double>(Close.begin() + startIndex, Close.begin() + endIndex);
-			auto openSubset = vector<double>(Open.begin() + startIndex, Open.begin() + endIndex);
-			auto volSubset = vector<double>(Volume.begin() + startIndex, Volume.begin() + endIndex);
-			auto lowSubset = vector<double>(Low.begin() + startIndex, Low.begin() + endIndex);
-			auto highSubset = vector<double>(High.begin() + startIndex, High.begin() + endIndex);
+			auto closeSubset = vector<double>(Close.data.begin() + startIndex, Close.data.begin() + endIndex);
+			auto openSubset = vector<double>(Open.data.begin() + startIndex, Open.data.begin() + endIndex);
+			auto volSubset = vector<double>(Volume.data.begin() + startIndex, Volume.data.begin() + endIndex);
+			auto lowSubset = vector<double>(Low.data.begin() + startIndex, Low.data.begin() + endIndex);
+			auto highSubset = vector<double>(High.data.begin() + startIndex, High.data.begin() + endIndex);
 
 			return StockObject(ticker, dateSubset, closeSubset, openSubset,
 				highSubset, lowSubset, volSubset);
@@ -119,12 +103,12 @@ struct StockObject {
 		StockObject(string stock_name, vector<string> _date, vector<double> _close, vector<double> _open,
 			vector<double> _high, vector<double> _low, vector<double> _vol) {
 			ticker = stock_name;
-			Close = _close;
-			Open = _open;
-			High = _high;
+			Close = DataContainer(_close, Date);
+			Open = DataContainer(_open, Date);
+			High = DataContainer(_high, Date);
 			Date = _date;
-			Volume = _vol;
-			Low = _low;
+			Volume = DataContainer(_vol, Date);;
+			Low = DataContainer(_low, Date);;
 		}
 };
 

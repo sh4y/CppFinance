@@ -17,9 +17,9 @@ int main()
 
 	//stock.getDataAtDate("2010-10-14");
 	StockObject ss = stock.GetDataSubsetBetweenDates("2010-10-14", "2010-10-26");
-	double cr = ss.GetCumulativeReturnClosingPrices();
+	auto date = ss.Date;
 
-	cout << cr << endl;
+	double cr = ss.Close.CumulativeReturn();
 	
 	return 0;
 }
