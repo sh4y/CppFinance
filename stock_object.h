@@ -80,31 +80,26 @@ struct StockObject {
 			return result;
 		}
 		
-		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd=true) {
+		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd = true) {
 			int modifier = inclusiveEnd ? 1 : 0;
 
 			int startIndex = getIndexOfDate(date1, Date);
 			int endIndex = getIndexOfDate(date2, Date) + modifier;
 
-
-<<<<<<< HEAD
-		vector<double> getMonthlyClosingPrices() {
-			return MonthlyClosingPrices;
-		}
-
-		// Percent change of stock price
-=======
 			auto dateSubset = vector<string>(Date.begin() + startIndex, Date.begin() + endIndex);
 			auto closeSubset = vector<double>(Close.data.begin() + startIndex, Close.data.begin() + endIndex);
 			auto openSubset = vector<double>(Open.data.begin() + startIndex, Open.data.begin() + endIndex);
 			auto volSubset = vector<double>(Volume.data.begin() + startIndex, Volume.data.begin() + endIndex);
 			auto lowSubset = vector<double>(Low.data.begin() + startIndex, Low.data.begin() + endIndex);
 			auto highSubset = vector<double>(High.data.begin() + startIndex, High.data.begin() + endIndex);
->>>>>>> 7fa938c3f023961116d9e4bc22a52d88f7a1cce9
 
 			return StockObject(ticker, dateSubset, closeSubset, openSubset,
 				highSubset, lowSubset, volSubset);
 		}
+
+		vector<double> getMonthlyClosingPrices() {
+			return MonthlyClosingPrices;
+		}					
 
 		double PriceChangeBetweenDate(string date1, string date2) {
 			double p1 = getDataPointAtDate(date1)[3];
