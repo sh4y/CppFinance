@@ -7,6 +7,9 @@ using std::ifstream;
 
 struct StockObject {
 	private:
+		vector<double> MonthlyDates;
+		vector<double> MonthlyClosingPrices;
+
 		void fillStockDataFromFile() {
 			bool opened_header = false;
 			ifstream stock_file("data/" + ticker + ".csv");
@@ -22,6 +25,15 @@ struct StockObject {
 						line_object lineObj = parseLine(line);
 						vector<double> line_data = lineObj.data;
 						string line_date = lineObj.date;
+
+						char dt[11];
+						strcpy_s(dt, line_date.c_str());
+						string day = "";
+						day = string(1, dt[8]) + string(1, dt[9]);
+
+						if (day == "01") {
+							MonthlyClosingPrices.push_back(line_data[3]);
+						}
 
 						Date.push_back(line_date);
 						Open.push_back(line_data[0]);
@@ -59,6 +71,10 @@ struct StockObject {
 			
 
 			return result;
+		}
+
+		vector<double> getMonthlyClosingPrices() {
+			return MonthlyClosingPrices;
 		}
 
 		// Percent change of stock price

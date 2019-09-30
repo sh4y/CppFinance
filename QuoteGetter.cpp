@@ -16,8 +16,11 @@ int main()
 	StockObject index(index_name);
 
 	//stock.getDataAtDate("2010-10-14");
-	auto result = stock.GetPercentChanges(true);
-	auto result2 = stock.GetPercentChanges(false);
+	auto result = stock.getMonthlyClosingPrices();
+
+	for (int i = 0; i < result.size(); i++) {
+		cout << result[i] << endl;
+	}
 	
 	return 0;
 }
