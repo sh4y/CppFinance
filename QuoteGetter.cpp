@@ -29,5 +29,5 @@ int main()
 	auto percentChanges = ss.Close.GetPercentChangesFromDateToDate("2016-06-06", "2017-06-06");
 	auto var = Variance(percentChanges);
 	auto std = StandardDev(percentChanges);
-	return 0;
+	return 0; 
 }
