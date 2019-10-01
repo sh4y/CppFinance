@@ -15,6 +15,19 @@ public:
 	}
 };
 
+vector<string> getNDayDatapoints(int n, vector<string> data) {
+	if (n >= data.size()) {
+		return data;
+	}
+
+	vector<string> result;
+	for (int i = 0; i < data.size(); i += n) {
+		result.push_back(data[i]);
+	}
+
+	return result;
+}
+
 line_object parseLine(string line) {
 	//cout << line << endl;
 	int line_length = line.size();

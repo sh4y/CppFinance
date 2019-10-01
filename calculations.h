@@ -32,7 +32,7 @@ private:
 	}
 
 	double MomentSum(vector<double> data, int n) {
-		double mean = SampleMean(data);
+		double mean = SampleMean();
 		vector<double> diff;
 		for (int i = 0; i < data.size(); i++) {
 			diff.push_back(pow(data[i] - mean, n));
@@ -72,6 +72,21 @@ public:
 		return percents;
 	}
 
+
+	vector<double> getNDayDatapoints(int n) {
+		if (n <= data.size()) {
+			return data;
+		}
+
+		vector<double> result;
+		for (int i = 0; i < data.size(); i += n) {
+			result.push_back(data[i]);
+		}
+
+		return result;
+	}
+
+
 	vector<double> GrossReturnsChange(vector<double> _closing_prices)
 	{
 		vector<double> returns;
@@ -96,30 +111,30 @@ public:
 		return cumulativeReturn;
 	}
 
-	double SampleMean(vector<double> data) {
+	double SampleMean() {
 		auto sum = Sum(data);
 		return sum / data.size();
 	}
 
-	double Variance(vector<double> data) {
+	double Variance() {
 		double denom = data.size() - 1;
 		double num = MomentSum(data, 2);
 		return num / denom;
 	}
 
-	double StandardDev(vector<double> data) {
-		return sqrt(Variance(data));
+	double StandardDev() {
+		return sqrt(Variance());
 	}
 
-	double Skewness(vector<double> data) {
-		double stdev = StandardDev(data);
+	double Skewness() {
+		double stdev = StandardDev();
 		double num = MomentSum(data, 3);
 		double dem = (data.size() - 1) * pow(stdev, 3);
 		return num / dem;
 	}
 
-	double Kurtosis(vector<double> data) {
-		double stdev = StandardDev(data);
+	double Kurtosis() {
+		double stdev = StandardDev();
 		double num = MomentSum(data, 4);
 		double dem = (data.size() - 1) * pow(stdev, 4);
 		return num / dem;

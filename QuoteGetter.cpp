@@ -16,9 +16,10 @@ int main()
 	StockObject index(index_name);
 
 	//stock.getDataAtDate("2010-10-14");
-	StockObject ss = stock.GetDataSubsetBetweenDates("2010-10-14", "2010-10-26");
-	auto date = ss.Date;
+	StockObject ss = stock.GetDataSubsetBetweenDates("2010-10-14", "2013-10-23");
 
-	double cr = ss.Close.CumulativeReturn();	
+	auto weeklyDate = getNDayDatapoints(7, ss.Date);
+	auto weeklyPrices = ss.Close.getNDayDatapoints(7);
+
 	return 0;
 }
