@@ -10,6 +10,10 @@ public:
 	StockObject stock;
 	double quantity;
 
+	string getPurchaseDate() {
+		return purchaseDate;
+	}
+
 	double getHoldingValueAtDate(string _date) {
 		auto data = stock.getDataPointAtDate(_date);
 		double closingPrice = data[3];
@@ -35,6 +39,20 @@ public:
 };
 
 struct Portfolio {
+private:
+	vector<double> getPortfolioWeights(string date) {
+		//string _date = "2017-06-06";
+		double pfValue = getPortfolioValueAtDate(date);
+		vector <double> weights;
+		for (int i = 0; i < holdings.size(); i++) {
+			auto holdingValue = holdings[i].getHoldingValueAtDate(date);
+			auto weight = holdingValue / pfValue;
+
+			weights.push_back(weight);
+		}
+
+		return weights;
+	}
 public:
 	vector<PortfolioObject> holdings;
 
@@ -52,6 +70,22 @@ public:
 		}
 
 		return result;
+	}
+
+	double getPortfolioReturnsAtDate(string endDate) {
+		auto weights = getPortfolioWeights(endDate);
+		double finalReturn = 0;
+		double pfoReturn, weightedReturn;
+		for (int i = 0; i < holdings.size(); i++) {
+			auto purchaseDate = holdings[i].getPurchaseDate();
+
+			pfoReturn = holdings[i].stock.Close.CumulativeReturn(purchaseDate, endDate);
+			weightedReturn = pfoReturn * weights[i];
+
+			finalReturn += weightedReturn;
+		}
+
+		return finalReturn;
 	}
 
 	/* Constructors */

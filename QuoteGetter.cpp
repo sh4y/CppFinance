@@ -25,5 +25,7 @@ int main()
 	double ogVal = pf.getPortfolioValueAtDate("2016-06-06");
 	double newVal = pf.getPortfolioValueAtDate("2017-06-06");
 
+	double returnVal = pf.getPortfolioReturnsAtDate("2017-06-06");
+
 	return 0;
 }

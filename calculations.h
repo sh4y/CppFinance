@@ -7,17 +7,19 @@
 struct DataContainer
 {
 private:
-	vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates, bool asPercent = false) {
+	vector<double> PercentChangeFromDateToDate(string fromDate, string toDate, vector<double> _closing_prices, vector<string> dates, bool asPercent = false) {
 
 		if (_closing_prices.size() != dates.size()) {
 			throw;
 		}
 
-		int index = getIndexOfDate(date, dates);
+		int startIndex = getIndexOfDate(fromDate, dates);
+		int endIndex = getIndexOfDate(toDate, dates);
+
 		vector<double> percents;
-		auto closing_prices = vector<double>(_closing_prices.begin() + index, _closing_prices.end());
+		auto closing_prices = vector<double>(_closing_prices.begin() + startIndex, _closing_prices.begin() + endIndex +1);
 		double today, tomorrow, pct;
-		for (int i = index; i < closing_prices.size() - 1; i++) {
+		for (int i = 0; i < closing_prices.size()-1; i++) {
 			today = closing_prices[i];
 			tomorrow = closing_prices[i + 1];
 			pct = (tomorrow - today) / today;
@@ -56,15 +58,15 @@ public:
 	}
 
 	vector<double> GetPercentChanges(bool asPercent = false) {
-		return PercentChangeFromDate(Date[0], data, Date, asPercent);
+		return PercentChangeFromDateToDate(Date[0], Date.back(), data, Date, asPercent);
 	}
 
-	vector<double> GetPercentChangesFromDate(string date, bool asPercent = false) {
-		return PercentChangeFromDate(date, data, Date, asPercent);
+	vector<double> GetPercentChangesFromDateToDate(string date1, string date2, bool asPercent = false) {
+		return PercentChangeFromDateToDate(date1, date2, data, Date, asPercent);
 	}
 
-	vector<double> LogPercentChangeFromDate(string date, vector<string> dates) {
-		auto percents = PercentChangeFromDate(date, data, dates);
+	vector<double> LogPercentChangeFromDateToDate(string date1, string date2, vector<string> dates) {
+		auto percents = PercentChangeFromDateToDate(date1, date2, data, dates);
 		for (int i = 0; i < percents.size(); i++) {
 			percents[i] = log(percents[i]);
 		}
@@ -98,10 +100,12 @@ public:
 		return returns;
 	}
 
-	double CumulativeReturn()
+	double CumulativeReturn(string fromDate, string toDate)
 	{
+		vector<double> _pctchange;
+		_pctchange = GetPercentChangesFromDateToDate(fromDate, toDate);
+
 		double cumulativeReturn = 1;
-		auto _pctchange = GetPercentChanges();
 		
 		for (int i = 0; i < _pctchange.size(); i++)
 		{
