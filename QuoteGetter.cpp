@@ -1,6 +1,6 @@
 // QuoteGetter.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-#include "stock_object.h"
+#include "portfolio_object.h"
 
 using std::cout;
 using std::endl;
@@ -15,11 +15,15 @@ int main()
 	StockObject stock(stock_name);
 	StockObject index(index_name);
 
-	//stock.getDataAtDate("2010-10-14");
-	StockObject ss = stock.GetDataSubsetBetweenDates("2010-10-14", "2013-10-23");
+	PortfolioObject KO(stock, 35, "2016-06-06");
+	PortfolioObject SPY(index, 35, "2016-06-06");
 
-	auto weeklyDate = getNDayDatapoints(7, ss.Date);
-	auto weeklyPrices = ss.Close.getNDayDatapoints(7);
+	Portfolio pf;
+	pf.AddHolding(KO);
+	pf.AddHolding(SPY);
+
+	double ogVal = pf.getPortfolioValueAtDate("2016-06-06");
+	double newVal = pf.getPortfolioValueAtDate("2017-06-06");
 
 	return 0;
 }

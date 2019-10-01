@@ -6,7 +6,7 @@ using std::ifstream;
 
 struct StockObject {
 	private:
-		vector<double> MonthlyDates;
+		vector<string> MonthlyDates;
 		vector<double> MonthlyClosingPrices;
 
 		void fillStockDataFromFile() {
@@ -32,6 +32,7 @@ struct StockObject {
 
 						if (day == "01") {
 							MonthlyClosingPrices.push_back(line_data[3]);
+							MonthlyDates.push_back(line_date);
 						}
 
 						Date.push_back(line_date);
@@ -97,8 +98,9 @@ struct StockObject {
 				highSubset, lowSubset, volSubset);
 		}
 
-		vector<double> getMonthlyClosingPrices() {
-			return MonthlyClosingPrices;
+
+		DataContainer getMonthlyClosingPrices() {
+			return DataContainer(MonthlyClosingPrices, MonthlyDates);
 		}			
 
 		double PriceChangeBetweenDate(string date1, string date2) {
@@ -109,6 +111,10 @@ struct StockObject {
 		}
 
 		/* Constructors */
+
+		StockObject() {
+
+		}
 		
 		StockObject(string stock_name) {
 			ticker = stock_name;
