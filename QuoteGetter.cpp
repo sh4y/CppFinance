@@ -22,10 +22,12 @@ int main()
 	pf.AddHolding(KO);
 	pf.AddHolding(SPY);
 
-	double ogVal = pf.getPortfolioValueAtDate("2016-06-06");
-	double newVal = pf.getPortfolioValueAtDate("2017-06-06");
+	/*double ogVal = pf.getPortfolioValueAtDate("2016-06-06");
+	double newVal = pf.getPortfolioValueAtDate("2017-06-06");*/
 
-	double returnVal = pf.getPortfolioReturnsAtDate("2017-06-06");
-
+	auto ss = stock.GetDataSubsetBetweenDates("2016-06-06", "2017-06-06");
+	auto percentChanges = ss.Close.GetPercentChangesFromDateToDate("2016-06-06", "2017-06-06");
+	auto var = Variance(percentChanges);
+	auto std = StandardDev(percentChanges);
 	return 0;
 }

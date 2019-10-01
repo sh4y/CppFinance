@@ -29,19 +29,6 @@ private:
 		return percents;
 	}
 
-	double Sum(vector<double> data) {
-		return std::accumulate(data.begin(), data.end(), 0.0);
-	}
-
-	double MomentSum(vector<double> data, int n) {
-		double mean = SampleMean();
-		vector<double> diff;
-		for (int i = 0; i < data.size(); i++) {
-			diff.push_back(pow(data[i] - mean, n));
-		}
-		return Sum(diff);
-	}
-
 public:
 	vector<double> data;
 	vector<string> Date;
@@ -57,11 +44,11 @@ public:
 		data = _data;
 	}
 
-	vector<double> GetPercentChanges(bool asPercent = false) {
+	vector<double> GetPercentChanges(bool asPercent = true) {
 		return PercentChangeFromDateToDate(Date[0], Date.back(), data, Date, asPercent);
 	}
 
-	vector<double> GetPercentChangesFromDateToDate(string date1, string date2, bool asPercent = false) {
+	vector<double> GetPercentChangesFromDateToDate(string date1, string date2, bool asPercent = true) {
 		return PercentChangeFromDateToDate(date1, date2, data, Date, asPercent);
 	}
 
@@ -114,33 +101,47 @@ public:
 
 		return cumulativeReturn;
 	}
-
-	double SampleMean() {
-		auto sum = Sum(data);
-		return sum / data.size();
-	}
-
-	double Variance() {
-		double denom = data.size() - 1;
-		double num = MomentSum(data, 2);
-		return num / denom;
-	}
-
-	double StandardDev() {
-		return sqrt(Variance());
-	}
-
-	double Skewness() {
-		double stdev = StandardDev();
-		double num = MomentSum(data, 3);
-		double dem = (data.size() - 1) * pow(stdev, 3);
-		return num / dem;
-	}
-
-	double Kurtosis() {
-		double stdev = StandardDev();
-		double num = MomentSum(data, 4);
-		double dem = (data.size() - 1) * pow(stdev, 4);
-		return num / dem;
-	}
 };
+
+
+double Sum(vector<double> data) {
+	return std::accumulate(data.begin(), data.end(), 0.0);
+}
+
+double SampleMean(vector<double> _data) {
+	auto sum = Sum(_data);
+	return sum / _data.size();
+}
+
+double MomentSum(vector<double> _data, int n) {
+	double mean = SampleMean(_data);
+	vector<double> diff;
+	for (int i = 0; i < _data.size(); i++) {
+		diff.push_back(pow(_data[i] - mean, n));
+	}
+	return Sum(diff);
+}
+
+double Variance(vector<double> _data) {
+	double denom = _data.size() - 1;
+	double num = MomentSum(_data, 2);
+	return num / denom;
+}
+
+double StandardDev(vector<double> _data) {
+	return sqrt(Variance(_data));
+}
+
+double Skewness(vector<double> _data) {
+	double stdev = StandardDev(_data);
+	double num = MomentSum(_data, 3);
+	double dem = (_data.size() - 1) * pow(stdev, 3);
+	return num / dem;
+}
+
+double Kurtosis(vector<double> _data) {
+	double stdev = StandardDev(_data);
+	double num = MomentSum(_data, 4);
+	double dem = (_data.size() - 1) * pow(stdev, 4);
+	return num / dem;
+}
