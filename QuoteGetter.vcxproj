@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="calculations.h" />
     <ClInclude Include="datatools.h" />
+    <ClInclude Include="portfolio_object.h" />
     <ClInclude Include="stock_object.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

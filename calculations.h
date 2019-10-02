@@ -7,17 +7,19 @@
 struct DataContainer
 {
 private:
-	vector<double> PercentChangeFromDate(string date, vector<double> _closing_prices, vector<string> dates, bool asPercent = false) {
+	vector<double> PercentChangeFromDateToDate(string fromDate, string toDate, vector<double> _closing_prices, vector<string> dates, bool asPercent = false) {
 
 		if (_closing_prices.size() != dates.size()) {
 			throw;
 		}
 
-		int index = getIndexOfDate(date, dates);
+		int startIndex = getIndexOfDate(fromDate, dates);
+		int endIndex = getIndexOfDate(toDate, dates);
+
 		vector<double> percents;
-		auto closing_prices = vector<double>(_closing_prices.begin() + index, _closing_prices.end());
+		auto closing_prices = vector<double>(_closing_prices.begin() + startIndex, _closing_prices.begin() + endIndex +1);
 		double today, tomorrow, pct;
-		for (int i = index; i < closing_prices.size() - 1; i++) {
+		for (int i = 0; i < closing_prices.size()-1; i++) {
 			today = closing_prices[i];
 			tomorrow = closing_prices[i + 1];
 			pct = (tomorrow - today) / today;
@@ -25,19 +27,6 @@ private:
 			percents.push_back(pct);
 		}
 		return percents;
-	}
-
-	double Sum(vector<double> data) {
-		return std::accumulate(data.begin(), data.end(), 0.0);
-	}
-
-	double MomentSum(vector<double> data, int n) {
-		double mean = SampleMean(data);
-		vector<double> diff;
-		for (int i = 0; i < data.size(); i++) {
-			diff.push_back(pow(data[i] - mean, n));
-		}
-		return Sum(diff);
 	}
 
 public:
@@ -55,22 +44,37 @@ public:
 		data = _data;
 	}
 
-	vector<double> GetPercentChanges(bool asPercent = false) {
-		return PercentChangeFromDate(Date[0], data, Date, asPercent);
+	vector<double> GetPercentChanges(bool asPercent = true) {
+		return PercentChangeFromDateToDate(Date[0], Date.back(), data, Date, asPercent);
 	}
 
-	vector<double> GetPercentChangesFromDate(string date, bool asPercent = false) {
-		return PercentChangeFromDate(date, data, Date, asPercent);
+	vector<double> GetPercentChangesFromDateToDate(string date1, string date2, bool asPercent = true) {
+		return PercentChangeFromDateToDate(date1, date2, data, Date, asPercent);
 	}
 
-	vector<double> LogPercentChangeFromDate(string date, vector<string> dates) {
-		auto percents = PercentChangeFromDate(date, data, dates);
+	vector<double> LogPercentChangeFromDateToDate(string date1, string date2, vector<string> dates) {
+		auto percents = PercentChangeFromDateToDate(date1, date2, data, dates);
 		for (int i = 0; i < percents.size(); i++) {
 			percents[i] = log(percents[i]);
 		}
 
 		return percents;
 	}
+
+
+	vector<double> getNDayDatapoints(int n) {
+		if (n <= data.size()) {
+			return data;
+		}
+
+		vector<double> result;
+		for (int i = 0; i < data.size(); i += n) {
+			result.push_back(data[i]);
+		}
+
+		return result;
+	}
+
 
 	vector<double> GrossReturnsChange(vector<double> _closing_prices)
 	{
@@ -83,10 +87,12 @@ public:
 		return returns;
 	}
 
-	double CumulativeReturn()
+	double CumulativeReturn(string fromDate, string toDate)
 	{
+		vector<double> _pctchange;
+		_pctchange = GetPercentChangesFromDateToDate(fromDate, toDate);
+
 		double cumulativeReturn = 1;
-		auto _pctchange = GetPercentChanges();
 		
 		for (int i = 0; i < _pctchange.size(); i++)
 		{
@@ -95,33 +101,47 @@ public:
 
 		return cumulativeReturn;
 	}
-
-	double SampleMean(vector<double> data) {
-		auto sum = Sum(data);
-		return sum / data.size();
-	}
-
-	double Variance(vector<double> data) {
-		double denom = data.size() - 1;
-		double num = MomentSum(data, 2);
-		return num / denom;
-	}
-
-	double StandardDev(vector<double> data) {
-		return sqrt(Variance(data));
-	}
-
-	double Skewness(vector<double> data) {
-		double stdev = StandardDev(data);
-		double num = MomentSum(data, 3);
-		double dem = (data.size() - 1) * pow(stdev, 3);
-		return num / dem;
-	}
-
-	double Kurtosis(vector<double> data) {
-		double stdev = StandardDev(data);
-		double num = MomentSum(data, 4);
-		double dem = (data.size() - 1) * pow(stdev, 4);
-		return num / dem;
-	}
 };
+
+
+double Sum(vector<double> data) {
+	return std::accumulate(data.begin(), data.end(), 0.0);
+}
+
+double SampleMean(vector<double> _data) {
+	auto sum = Sum(_data);
+	return sum / _data.size();
+}
+
+double MomentSum(vector<double> _data, int n) {
+	double mean = SampleMean(_data);
+	vector<double> diff;
+	for (int i = 0; i < _data.size(); i++) {
+		diff.push_back(pow(_data[i] - mean, n));
+	}
+	return Sum(diff);
+}
+
+double Variance(vector<double> _data) {
+	double denom = _data.size() - 1;
+	double num = MomentSum(_data, 2);
+	return num / denom;
+}
+
+double StandardDev(vector<double> _data) {
+	return sqrt(Variance(_data));
+}
+
+double Skewness(vector<double> _data) {
+	double stdev = StandardDev(_data);
+	double num = MomentSum(_data, 3);
+	double dem = (_data.size() - 1) * pow(stdev, 3);
+	return num / dem;
+}
+
+double Kurtosis(vector<double> _data) {
+	double stdev = StandardDev(_data);
+	double num = MomentSum(_data, 4);
+	double dem = (_data.size() - 1) * pow(stdev, 4);
+	return num / dem;
+}

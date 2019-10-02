@@ -6,6 +6,9 @@ using std::ifstream;
 
 struct StockObject {
 	private:
+		vector<string> MonthlyDates;
+		vector<double> MonthlyClosingPrices;
+
 		void fillStockDataFromFile() {
 			bool opened_header = false;
 			ifstream stock_file("data/" + ticker + ".csv");
@@ -21,6 +24,16 @@ struct StockObject {
 						line_object lineObj = parseLine(line);
 						vector<double> line_data = lineObj.data;
 						string line_date = lineObj.date;
+
+						char dt[11];
+						strcpy_s(dt, line_date.c_str());
+						string day = "";
+						day = string(1, dt[8]) + string(1, dt[9]);
+
+						if (day == "01") {
+							MonthlyClosingPrices.push_back(line_data[3]);
+							MonthlyDates.push_back(line_date);
+						}
 
 						Date.push_back(line_date);
 						
@@ -68,12 +81,11 @@ struct StockObject {
 			return result;
 		}
 		
-		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd=true) {
+		StockObject GetDataSubsetBetweenDates(string date1, string date2, bool inclusiveEnd = true) {
 			int modifier = inclusiveEnd ? 1 : 0;
 
 			int startIndex = getIndexOfDate(date1, Date);
 			int endIndex = getIndexOfDate(date2, Date) + modifier;
-
 
 			auto dateSubset = vector<string>(Date.begin() + startIndex, Date.begin() + endIndex);
 			auto closeSubset = vector<double>(Close.data.begin() + startIndex, Close.data.begin() + endIndex);
@@ -86,6 +98,11 @@ struct StockObject {
 				highSubset, lowSubset, volSubset);
 		}
 
+
+		DataContainer getMonthlyClosingPrices() {
+			return DataContainer(MonthlyClosingPrices, MonthlyDates);
+		}			
+
 		double PriceChangeBetweenDate(string date1, string date2) {
 			double p1 = getDataPointAtDate(date1)[3];
 			double p2 = getDataPointAtDate(date2)[3];
@@ -94,6 +111,10 @@ struct StockObject {
 		}
 
 		/* Constructors */
+
+		StockObject() {
+
+		}
 		
 		StockObject(string stock_name) {
 			ticker = stock_name;
