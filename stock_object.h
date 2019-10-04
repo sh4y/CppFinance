@@ -125,6 +125,7 @@ struct StockObject {
 			vector<double> _high, vector<double> _low, vector<double> _vol) {
 			ticker = stock_name;
 			Date = _date;
+			
 			Close = DataContainer(_close, Date);
 			Open = DataContainer(_open, Date);
 			High = DataContainer(_high, Date);
