@@ -88,6 +88,11 @@ public:
 		return finalReturn;
 	}
 
+	double getPortfolioRisk(string _date) {
+		vector<double> weights = getPortfolioWeights(_date);
+		
+	}
+
 	/* Constructors */
 
 	Portfolio() {

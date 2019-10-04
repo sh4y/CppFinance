@@ -1,6 +1,7 @@
 #pragma once
 #include <numeric>
 #include "datatools.h"
+#include "NumCpp/NumCpp/include/NumCpp.hpp"
 
 // only closing prices for now
 
@@ -126,6 +127,21 @@ double Variance(vector<double> _data) {
 	double denom = _data.size() - 1;
 	double num = MomentSum(_data, 2);
 	return num / denom;
+}
+
+double Covariance(vector<double> _data1, vector<double> _data2) {
+	if (_data1.size() != _data2.size())
+		throw;
+
+	double d1Mean = SampleMean(_data1);
+	double d2Mean = SampleMean(_data2);
+	int n =  _data1.size();
+	double sum = 0;
+	for (int i = 0; i < n; i++) {
+		sum += (_data1[i] - d1Mean) * (_data2[i] - d2Mean);
+	}
+
+	return sum / (n - 1);
 }
 
 double StandardDev(vector<double> _data) {
