@@ -3,7 +3,7 @@
 
 struct PortfolioObject {
 private:
-	double purchasePrice;
+	double purchasePrice{};
 	string purchaseDate;
 
 public:
@@ -24,10 +24,19 @@ public:
 		return purchasePrice * quantity;
 	}
 
+	double ParkinsonVolatility() {
+		int numDays = stock.Date.size();
+		double innerSum = 0;
+		for (int i = 0; i < numDays; i++) {
+			innerSum += pow(log(stock.High.data[i] / stock.Low.data[i]),2);
+		}
+		return (innerSum / (4 * numDays * log(2)));
+	}
+
 	/* Constructors */
 
-	PortfolioObject() {
-
+	PortfolioObject(): purchasePrice(0), quantity(0)
+	{
 	}
 
 	PortfolioObject(StockObject _stock, double _quantity, string _date) {
@@ -54,7 +63,7 @@ private:
 		return weights;
 	}
 public:
-	vector<PortfolioObject> holdings;
+	vector<PortfolioObject> holdings{};
 
 	void AddHolding(PortfolioObject h) {
 		holdings.push_back(h);
@@ -86,11 +95,6 @@ public:
 		}
 
 		return finalReturn;
-	}
-
-	double getPortfolioRisk(string _date) {
-		vector<double> weights = getPortfolioWeights(_date);
-		
 	}
 
 	/* Constructors */

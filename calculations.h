@@ -62,7 +62,6 @@ public:
 		return percents;
 	}
 
-
 	vector<double> getNDayDatapoints(int n) {
 		if (n <= data.size()) {
 			return data;
@@ -140,9 +139,11 @@ double Covariance(vector<double> _data1, vector<double> _data2) {
 	for (int i = 0; i < n; i++) {
 		sum += (_data1[i] - d1Mean) * (_data2[i] - d2Mean);
 	}
-
 	return sum / (n - 1);
 }
+
+//TODO: Build Covariance Matrix	
+
 
 double StandardDev(vector<double> _data) {
 	return sqrt(Variance(_data));
