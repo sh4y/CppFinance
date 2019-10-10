@@ -18,7 +18,7 @@ int main()
 	PortfolioObject KO(stock, 35, "2016-06-06");
 	PortfolioObject SPY(index, 35, "2016-06-06");
 
-	cout << KO.ParkinsonVolatility() << endl;
+	cout << KO.AnnualParkinsonVolatility() << endl;
 
 	Portfolio pf;
 	pf.AddHolding(KO);

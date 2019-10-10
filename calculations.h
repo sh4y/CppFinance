@@ -1,7 +1,6 @@
 #pragma once
 #include <numeric>
 #include "datatools.h"
-#include "NumCpp/NumCpp/include/NumCpp.hpp"
 
 // only closing prices for now
 

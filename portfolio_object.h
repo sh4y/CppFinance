@@ -24,13 +24,13 @@ public:
 		return purchasePrice * quantity;
 	}
 
-	double ParkinsonVolatility() {
+	double AnnualParkinsonVolatility() {
 		int numDays = stock.Date.size();
 		double innerSum = 0;
 		for (int i = 0; i < numDays; i++) {
 			innerSum += pow(log(stock.High.data[i] / stock.Low.data[i]),2);
 		}
-		return (innerSum / (4 * numDays * log(2)));
+		return sqrt(252) * (innerSum / (4 * numDays * log(2)));
 	}
 
 	/* Constructors */
